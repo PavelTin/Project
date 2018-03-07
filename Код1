@@ -1,0 +1,81 @@
+import java.applet.*;
+import java.awt.*;
+
+public class Graf3 extends Applet {
+    public void paint(Graphics g) {
+        this.setSize(800, 800);      //рисую окно и оси координат
+        g.drawLine(10, 0, 10, 800);
+        g.drawLine(0, 400, 800, 400);
+
+        int x1;
+        int x2;
+        int y1;
+        int y2;
+        int x0;
+        int y0;
+        int a = 10;
+        int b = 400;
+        //x1 = a;
+        //y1 = b;
+        int t1 = 100;
+        int w1 = 300;
+
+        int t2 = 40;
+        int w2 = 120;
+
+        int t3 = 5;
+        int w3 = 340;
+
+        int t4 = 15;
+        int w4 = 300;
+
+        int t5 = 7;
+        int w5 = 320;
+
+        int t6 = 200;
+        int w6 = w5;
+
+        int t7 = 15;
+        int w7 = 390;
+
+        int t8 = 5;
+        int w8 = w1;
+
+        int t9 = 40;
+        int w9 = w1;
+        g.drawLine(a, b - w1, a + t1, b - w1); // 1-й участок
+        x1 = a + t1;
+        y1 = b - w1;
+        g.drawLine(x1, y1, x1 + t2, b - w2);//2-й участок
+
+        x1 = x1 + t2;
+        y1 = b - w2;
+        g.drawLine(x1, y1, x1 + t3, b - w3);// 3-й участок
+
+        x1 = x1 + t3;
+        y1 = b - w3;
+        g.drawLine(x1, y1, x1 + t4, b - w4);// 4-й участок
+
+        x1 = x1 + t4;
+        y1 = b - w4;
+        g.drawLine(x1, y1, x1 + t5, b - w5); //5-й участок
+
+        x1 = x1 + t5;
+        y1 = b - w5;
+        g.drawLine(x1, y1, x1 + t6, b - w6); //6-й участок
+
+        x1 = x1 + t6;
+        y1 = b - w6;
+        g.drawLine(x1, y1, x1 + t7, b - w7); //7-й участок
+
+        x1 = x1 + t7;
+        y1 = b - w7;
+        g.drawLine(x1, y1, x1 + t8, b - w8); //8-й участок
+
+        x1 = x1 + t8;
+        y1 = b - w8;
+        g.drawLine(x1, y1, x1 + t9, y1); //9-й участок
+    }
+}
+
+
