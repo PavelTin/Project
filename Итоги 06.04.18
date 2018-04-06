@@ -1,0 +1,65 @@
+Рисую песочные часы, изучаю анимацию
+
+import java.applet.*;
+import java.awt.*;
+
+public class DrawHG3 extends Applet {
+    public void paint(Graphics g) {
+        int width = 600;
+        int height = 600;
+        this.setSize(width, height);
+        Color newC = new Color(225, 155, 100);
+        g.setColor(newC);
+        g.fillRect(80, 20, 440, 30);
+        g.fillRect(80, 550, 440, 30);
+        Color newC1 = new Color(0, 185, 255);
+        g.setColor(newC1);
+        int R = 165;
+        int angle = 100;
+        int angle2 = 20;
+        int xCircle1 = 135;
+        int yCircle1 = -60;
+        int yCircle2 = 330;
+        int xo = width / 2;
+        int yo = 105;
+        g.drawArc(xCircle1, yCircle1, R * 2, R * 2, -(180 - (angle - angle2)), -angle);
+        g.drawArc(xCircle1, yCircle1, R * 2, R * 2, angle2, -angle);
+        g.drawArc(xCircle1, yCircle2, R * 2, R * 2, 180 - (angle - angle2), angle);
+        g.drawArc(xCircle1, yCircle2, R * 2, R * 2, -angle2, angle);
+        double radan = Math.toRadians(angle - angle2);
+        int xa = xo - (int) (R * Math.cos(radan));
+        int ya = yo + (int) (R * Math.sin(radan));
+        int xb = width - xa;
+        int l = 10;
+        int xleftc = (width + l) / 2;
+        int w = (xb - xleftc) * 2;
+        int h = (width / 2 - ya) * 2;
+        g.drawArc(xleftc - l - w, ya, w, h, 90, -180);
+        g.drawArc(xleftc, ya, w, h, 90, 180);
+
+        int hsand = 100;
+        int np = 10;
+        int npoints = np * 2 + 1;
+        int dy = hsand / (np - 1);
+        int yg = ya - hsand;
+        int[] arrayX = new int[npoints];
+        int[] arrayY = new int[npoints];
+        for (int i = 0; i < npoints - 1; i++) {
+            if (i < np) {
+                arrayY[i] = yg + i * dy;
+                arrayX[i] = xo - (int) Math.sqrt(R * R - Math.pow(yo - arrayY[i], 2)) + 1;
+            } else {
+                arrayY[i] = arrayY[npoints - i - 2];
+                arrayX[i] = width - arrayX[npoints - i - 2];
+            }
+        }
+        arrayY[npoints - 1] = yg;
+        arrayX[npoints - 1] = width / 2;
+        Color cSand = new Color(225, 175, 80);
+        g.setColor(cSand);
+        Polygon poly = new Polygon(arrayX, arrayY, npoints);
+        g.fillPolygon(poly);
+    }
+}
+
+
