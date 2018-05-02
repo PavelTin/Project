@@ -1,0 +1,142 @@
+1)Main
+
+import javax.swing.*;
+
+public class Main {
+    public static void main(String[] args) {
+        JFrame n = new JFrame("Function of hourglass weight change on time");             //создание панели + название
+        n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //закрытие панели по нажатию на крестик
+        n.setSize(800, 800);
+        n.add(new Result());     //класс, который рисует на этой панели
+        n.setVisible(true);     //делает видимым
+    }
+}
+
+2)import javax.swing.*;
+import java.awt.*;
+import java.util.Scanner;
+
+import static java.lang.Math.PI;
+
+public class Result extends JPanel {
+    Scanner sc = new Scanner(System.in);
+
+    public void paint(Graphics g) {
+        int Xsize = 700;
+        int Ysize = 600;
+        int x1 = 30;
+        int y1 = 30;
+        int y0 = Ysize / 2 + y1;
+        g.drawLine(30, 30, 30, 660);
+        g.drawLine(0, 330, 770, 330);
+        g.drawLine(20, 60, 30, 30);
+        g.drawLine(40, 60, 30, 30);
+        g.drawLine(740, 340, 770, 330);
+        g.drawLine(740, 320, 770, 330);
+        Font font = new Font("TimesNewRoman", Font.BOLD, 40);
+        g.setFont(font);
+        g.drawString("t", 770, 370);
+        g.drawString("⌂P", 30, 30);
+
+        double G = 10;
+        double q = 1700;
+        System.out.println("Enter the mass of sand, kg");
+        double mh = sc.nextDouble();      //параметры часов   //0.3
+        System.out.println("Enter the mass of hourglass, kg");
+        double M = sc.nextDouble();                            //0.1
+        System.out.println("Enter the work time of hourglass, ms");
+        int T = sc.nextInt();
+        System.out.println("Enter the idle time int the beginning, ms");
+        int t1 = sc.nextInt();                                               //200
+        System.out.println("Enter the idle time int the end, ms");
+        int t5 = sc.nextInt();                                              //200
+        System.out.println("Open the panel");
+
+        double H = 1;
+        double R = 0.1;
+        double Dneck = 0.002;
+        double Rneck = Dneck / 2;
+        double r0 = 0.0001;
+        double alpha = 120;
+
+        int Tsum = T + t1 + t5;
+
+        double Volume = M / q;
+        double m0 = 4 / 3 * PI * Math.pow(r0, 3);
+        double N = M / m0;
+        double t2 = Math.sqrt(2 * H / G) * 1000;
+        double vsand = N / (T - t2);
+        double radan = Math.toRadians(alpha / 2);
+        double hresult = Volume / (Math.PI * Math.pow(R, 2)) + 2 * R / (3 * Math.tan(radan));
+        int t4 = (int) (Math.sqrt(2 * (H - hresult) / G) * 1000);
+        int t3 = T - (int) t2 - t4;
+
+        int T2 = t1 + (int) t2;
+        int T3 = T2 + t3;
+        int T4 = T3 + t4;
+        int T5 = T4 + t5;
+
+        double v = Math.sqrt(2 * G * H);
+        double Ffall = m0 * vsand * Math.sqrt(2 * H * G);
+        double Fimp = m0 * vsand * Math.sqrt(2 * H * G);
+
+        double P0 = (mh + M) * G;
+        double P1 = P0 - Ffall;
+        double P2 = P0 + (Fimp - Ffall);
+        double P3 = P0 + Fimp;
+        double dP0 = 0;
+        double dP1 = P1 - P0;
+        double dP2 = P2 - P0;
+        double dP3 = P3 - P0;
+
+        int a = 250;
+        g.setColor(new Color(255, 0, 0));
+
+        g.drawLine(x1, y0, x1 + (int) (t1 * Xsize / Tsum), y0);
+        g.drawLine(x1, y0 + 1, x1 + (int) (t1 * Xsize / Tsum), y0 + 1);
+
+        g.drawLine(x1 + (int) (t1 * Xsize / Tsum), y0, x1 + (int) (T2 * Xsize / Tsum), y0 + (int) (dP1 * a / dP1));
+        g.drawLine(x1 + (int) (t1 * Xsize / Tsum), y0 + 1, x1 + (int) (T2 * Xsize / Tsum), y0 + (int) (dP1 * a / dP1) + 1);
+
+        g.drawLine(x1 + (int) (T2 * Xsize / Tsum), y0 + (int) (dP1 * a / dP1), x1 + (int) (T2 * Xsize / Tsum), y0 - (int) (dP2 * a / dP1));
+        g.drawLine(x1 + (int) (T2 * Xsize / Tsum) + 1, y0 + (int) (dP1 * a / dP1), x1 + (int) (T2 * Xsize / Tsum) + 1, y0 - (int) (dP2 * a / dP1));
+
+        g.drawLine(x1 + (int) (T2 * Xsize / Tsum), y0 - (int) (dP2 * a / dP1), x1 + (int) (T3 * Xsize / Tsum), y0 - (int) (dP2 * a / dP1));
+        g.drawLine(x1 + (int) (T2 * Xsize / Tsum), y0 - (int) (dP2 * a / dP1) + 1, x1 + (int) (T3 * Xsize / Tsum), y0 - (int) (dP2 * a / dP1) + 1);
+
+        g.drawLine(x1 + (int) (T3 * Xsize / Tsum), y0 - (int) (dP2 * a / dP1), x1 + (int) (T4 * Xsize / Tsum), y0 + (int) (dP3 * a / dP1));
+        g.drawLine(x1 + (int) (T3 * Xsize / Tsum), y0 - (int) (dP2 * a / dP1) + 1, x1 + (int) (T4 * Xsize / Tsum), y0 + (int) (dP3 * a / dP1) + 1);
+
+        g.drawLine(x1 + (int) (T4 * Xsize / Tsum), y0 + (int) (dP3 * a / dP1), x1 + (int) (T4 * Xsize / Tsum), y0 + (int) (dP0 * a / dP1));
+        g.drawLine(x1 + (int) (T4 * Xsize / Tsum + 1), y0 + (int) (dP3 * a / dP1), x1 + (int) (T4 * Xsize / Tsum) + 1, y0 + (int) (dP0 * a / dP1));
+
+        g.drawLine(x1 + (int) (T4 * Xsize / Tsum), y0 + (int) (dP0 * a / dP1), x1 + (int) (T5 * Xsize / Tsum), y0 - (int) (dP0 * a / dP1));
+        g.drawLine(x1 + (int) (T4 * Xsize / Tsum), y0 + (int) (dP0 * a / dP1) + 1, x1 + (int) (T5 * Xsize / Tsum), y0 - (int) (dP0 * a / dP1) + 1);
+
+        Font font2 = new Font("TimesNewRoman", Font.BOLD, 20);
+        g.setFont(font2);
+        g.setColor(new Color(0));
+        g.drawString("0", 10, 350);
+        g.drawString("T1", x1 + (int) (t1 * Xsize / Tsum), 350);
+        g.drawString("T2", x1 + (int) (T2 * Xsize / Tsum), 350);
+        g.drawString("T3", x1 + (int) (T3 * Xsize / Tsum), 350);
+        g.drawString("T4", x1 + (int) (T4 * Xsize / Tsum), 350);
+        g.drawString("T5", x1 + (int) (T5 * Xsize / Tsum), 350);
+        g.drawString("⌂P1", 0, y0 + (int) (dP1 * a / dP1) - 10);
+        g.drawLine(25, y0 + (int) (dP1 * a / dP1), 35, y0 + (int) (dP1 * a / dP1));
+        g.drawString("⌂P3", 0, y0 + (int) (dP3 * a / dP1) - 10);
+        g.drawLine(25, y0 + (int) (dP3 * a / dP1), 35, y0 + (int) (dP3 * a / dP1));
+
+        g.setFont(new Font("Arial", Font.BOLD, 15));
+        g.setColor(new Color(0, 185, 255));
+        g.drawString("Stage 1", y1, 325);
+        g.drawString("Stage 2", x1 + (int) (t1 * Xsize / Tsum), y0 + (int) (dP1 * a / dP1) / 4);
+        g.drawString("Stage 3", x1 + (int) (T2 * Xsize / Tsum), y0 + (int) (dP1 * a / dP1) / 2);
+        g.drawString("Stage 4", x1 + (int) (T3 * Xsize / Tsum) / 2, 325);
+        g.drawString("Stage 5", x1 + (int) (T3 * Xsize / Tsum), y0 + (int) (dP3 * a / dP1) / 2);
+        g.drawString("Stage 6", x1 + (int) (T4 * Xsize / Tsum), y0 + (int) (dP3 * a / dP1) / 4);
+        g.drawString("Stage 7", x1 + (int) (T4 * Xsize / Tsum), 325);
+    }
+}
+
+

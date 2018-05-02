@@ -1,0 +1,264 @@
+1) Main
+
+import javax.swing.*;
+
+public class Main {
+    public static void main(String[] args) {
+        JFrame n = new JFrame("HourGlassAnimation");             //создание панели + название
+        n.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  //закрытие панели по нажатию на крестик
+        n.setSize(600, 600);
+        n.add(new Field());     //класс, который рисует на этой панели
+        n.setVisible(true);     //делает видимым
+    }
+}
+
+2)import javax.swing.*;
+import java.awt.*;
+
+
+public class Field extends JPanel {
+    Dimension screenSize = new Dimension();
+    double width = screenSize.getWidth();
+    double height = screenSize.getHeight();
+
+
+    int length = 130;
+    int y0 = 50;
+    int x1 = 200;
+    int y1 = y0 + length;
+    int Dneck = 14;
+    int Lneck = 30;
+    int hsand = 150;
+    int R = 300 - x1;
+    int L = 600 - 2 * y0;
+    int x2 = x1 + R - Dneck / 2;
+    int y2 = y1 + (L - 2 * length - Lneck) / 2;
+    double V1 = 4710000;
+    int h = 0;
+    double G = 0.03;
+    double H = 600 - y2;
+    int T = 10000;
+    double t2 = Math.sqrt(2 * H / G);
+
+    boolean flag = false;
+    int z = 0;
+    int j = 0;
+    int m = 0;
+    int j1 = 0;
+    int m1 = 0;
+    int z1 = 0;
+    int b = 0;
+
+
+    int npoints = 6;
+    int[] arrayX = new int[npoints];
+    int[] arrayY = new int[npoints];
+    int[] arrayX1 = new int[npoints];
+    int[] arrayY1 = new int[npoints];
+
+    public Field() {        //конструктор
+        setFocusable(true);     //размещает изображение по центру
+    }
+
+    public void pause() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void paint(Graphics g) {
+        g.clearRect(0, 0, 600, 600);
+        g.setColor(Color.red);
+
+        g.setColor(new Color(225, 175, 80));
+        g.fillPolygon(arrayX, arrayY, npoints);
+        g.fillPolygon(arrayX1, arrayY1, npoints);
+
+        Color newC = new Color(225, 155, 100);
+        g.setColor(newC);
+        g.fillRect(140, 20, 320, 30);
+        g.fillRect(140, 600 - y0, 320, 30);
+        Color newC1 = new Color(0, 185, 255);
+        g.setColor(newC1);
+
+        g.drawLine(x1, y0, x1, y1);                                                         //2 пары вертикальных
+        g.drawLine(x1 + 2 * R, y0, x1 + 2 * R, y1);
+        g.drawLine(x1, y0 + L - length, x1, y0 + L);
+        g.drawLine(x1 + 2 * R, y0 + L - length, x1 + 2 * R, y0 + L);
+
+        g.drawLine(x1, y1, x2, y2);                                            //2 пары наклонных
+        g.drawLine(x1 + 2 * R, y1, x2 + Dneck, y2);
+        g.drawLine(x1, y0 + L - length, x2, y2 + Lneck);
+        g.drawLine(x1 + 2 * R, y0 + L - length, x2 + Dneck, y2 + Lneck);
+
+        g.drawLine(x2, y2, x2, y2 + Lneck);                                            //2 стенки горлышка
+        g.drawLine(x2 + Dneck, y2, x2 + Dneck, y2 + Lneck);
+
+        UpSand();
+
+        hcount();
+        UpVcount();
+        if ((flag == true) && (h - z >= 0)) {
+            z += 50;
+        }
+        g.setColor(new Color(225, 175, 80));
+        g.fillRect(x2 + 1, y2 + z, Dneck - 1, h - z);
+
+        DownSand();
+
+        pause();
+        repaint();
+    }
+
+    public void UpSand() {
+        if (flag == false) {
+            arrayX[0] = x1 + 1;
+            arrayY[0] = y2 - hsand + j;
+
+            arrayX[1] = x1 + 1;
+            arrayY[1] = y1;
+
+            arrayX[2] = x2 + 1;
+            arrayY[2] = y2;
+
+            arrayX[3] = x2 + Dneck - 1;
+            arrayY[3] = y2;
+
+            arrayX[4] = x1 + 2 * R - 1;
+            arrayY[4] = y1;
+
+            arrayX[5] = x1 + 2 * R - 1;
+            arrayY[5] = y2 - hsand + j;
+            j++;
+            if (j >= y1 - (y2 - hsand)) {
+                if (j % 10 != 0) {
+                    m++;
+                }
+                arrayX[1] += m;
+                arrayY[1] = y2 - hsand + j;
+                arrayX[4] -= m;
+                arrayY[4] = y2 - hsand + j;
+                arrayX[0] += m;
+                arrayX[5] -= m;
+
+                if (m >= R - Dneck / 2 + 4) {
+                    for (int i = 0; i < 6; i++) {
+                        arrayX[i] = 0;
+                        arrayY[i] = 0;
+                    }
+                    flag = true;
+                    m--;
+                }
+            }
+        }
+
+    }
+
+    public void DownSand() {
+
+        if (flag == false) {
+            arrayX1[0] = x2 - j1;
+            arrayY1[0] = y0 + L;
+
+            arrayX1[1] = x2 - j1;
+            arrayY1[1] = y0 + L;
+
+            arrayX1[2] = x2 + 2;
+            arrayY1[2] = y0 + L - 1 - m1;
+
+            arrayX1[3] = x2 + Dneck - 2;
+            arrayY1[3] = y0 + L - 1 - m1;
+
+            arrayX1[4] = x2 + Dneck + j1;
+            arrayY1[4] = y0 + L;
+
+            arrayX1[5] = x2 + Dneck + j1;
+            arrayY1[5] = y0 + L;
+            b++;
+            if (b % 3 != 0) {
+                m1++;
+            }
+            if (j1 <= R - Dneck / 2) {
+                j1 += 2;
+            } else {
+                if (b % 3 != 0) {
+                    z1++;
+                }
+                arrayY1[1] -= z1;
+                arrayY1[4] -= z1;
+            }
+        } else {
+            arrayX1[2] = x2 + Dneck / 2;
+            arrayX1[3] = x2 + Dneck / 2 + 1;
+        }
+    }
+
+    public void hcount() {
+
+        int dH = (int) H * 100 / (int) t2;
+        h += dH;
+        if (h > 265) {
+            h = 265;
+        }
+    }
+
+    public void UpVcount() {
+        int dV = (int) (V1 * 100 / (T - t2));
+        V1 -= dV;
+    }
+
+    public void changeHeightSand() {
+        double V = V1;
+        int ldimple = 40;
+        int Sdimple = (int) (Math.PI * Math.pow((ldimple / 2), 2));
+        int hdimple = 8;
+        int hlayer;
+        double tga = (y2 - y1) / (x2 - x1);
+        double Vdimple = hdimple * Sdimple / 3;
+        int h;
+        double rsection = R;
+        double hsection;
+        double Vcylin = Math.PI * Math.pow(R, 2) * (hsand - y2 + y1);
+
+        if (V < Vdimple) {
+            h = (int) (3 * V / Sdimple);
+            hlayer = 0;
+        } else {
+            h = hdimple;
+            if (V < Vcylin + Vdimple) {
+                hlayer = (int) ((V - Vdimple) / (Math.PI * Math.pow((R), 2)));
+            } else {
+                hlayer = (int) ((V - Vdimple) / (Math.PI * Math.pow((R), 2)));
+                rsection = Math.pow((Math.pow(R, 3) - 3 * V / Math.PI / tga), -3);
+                hsection = tga * (R - rsection);
+                hlayer = hsand - (y2 - y1) + (int) hsection;
+            }
+        }
+
+
+        arrayX[0] = x1 + 1;
+        arrayY[0] = y2 - hsand;
+
+        arrayX[1] = x1 + 1 + R - (int) rsection;
+        arrayY[1] = y2 - hsand + hlayer;
+
+        arrayX[2] = x2 + Dneck / 2 - ldimple / 2;
+        arrayY[2] = y2 - hsand + hlayer;
+
+        arrayX[3] = 300;
+        arrayY[3] = y2 - hsand + hlayer + h;
+
+        arrayX[4] = x2 + Dneck / 2 + ldimple / 2;
+        arrayY[4] = y2 - hsand + hlayer;
+
+        arrayX[5] = x1 + 2 * R - 1 - R + (int) rsection;
+        arrayY[5] = y2 - hsand + hlayer;
+
+        arrayX[6] = x1 + 2 * R - 1;
+        arrayY[6] = y2 - hsand;
+
+
+    }
+}
